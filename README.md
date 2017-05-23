@@ -2614,6 +2614,37 @@ no parameters.
   end
   ```
 
+* <a name="namespace-definition"></a>
+  Use explicit nesting of modules.
+  <sup>[[link](#namespace-definition)]</sup>
+  ```Ruby
+  MY_SCOPE = 'Global'
+  
+  # good - use longer, more verbose version with classes wrapped by modules
+  module Foo
+    MY_SCOPE = 'Foo Module'
+    class Bar
+      def scope1
+        puts MY_SCOPE
+      end
+    end
+  end
+  
+  # bad
+  class Foo::Bar
+    def scope2
+      puts MY_SCOPE
+    end
+  end
+  
+  Foo::Bar.new.scope1 # => "Foo Module"
+  Foo::Bar.new.scope2 # => "Global"
+  ```
+  Definitions at a namespace are only available if that namespace is defined via explicit nesting.
+  `module` keyword (as well as `class` and `def`) creates new lexical scope
+  for all the bindings inside. So, `module Foo` creates the scope `'Foo'` in which `MY_SCOPE`
+  constant with `'Foo Module'` value resides.
+
 * <a name="modules-vs-classes"></a>
   Prefer modules to classes with only class methods. Classes should be used
   only when it makes sense to create instances out of them.
@@ -3059,37 +3090,6 @@ no parameters.
   end
   ```
   
-* <a name="namespace-definition"></a>
-  Use explicit nesting of modules.
-  <sup>[[link](#namespace-definition)]</sup>
-  ```Ruby
-  MY_SCOPE = 'Global'
-  
-  # good - use longer, more verbose version with classes wrapped by modules
-  module Foo
-    MY_SCOPE = 'Foo Module'
-    class Bar
-      def scope1
-        puts MY_SCOPE
-      end
-    end
-  end
-  
-  # bad
-  class Foo::Bar
-    def scope2
-      puts MY_SCOPE
-    end
-  end
-  
-  Foo::Bar.new.scope1 # => "Foo Module"
-  Foo::Bar.new.scope2 # => "Global"
-  ```
-  Definitions at a namespace are only available if that namespace is defined via explicit nesting.
-  `module` keyword (as well as `class` and `def`) creates new lexical scope
-  for all the bindings inside. So, `module Foo` creates the scope `'Foo'` in which `MY_SCOPE`
-  constant with `'Foo Module'` value resides.
-
 ## Exceptions
 
 * <a name="prefer-raise-over-fail"></a>
